@@ -2,18 +2,42 @@
   "manifest_version": 3,
   "name": "SponsorHider",
   "version": "1.0.0",
-  "description": "Hides sponsored results on Google Search and Google Shopping. Optionally hides the AI Overview.",
+  "description": "Hides sponsored results on Google Search, Google Shopping, and Amazon. Optionally hides the AI Overview.",
   "permissions": ["storage"],
   "host_permissions": [
     "*://www.google.com/*",
-    "*://shopping.google.com/*"
+    "*://shopping.google.com/*",
+    "*://*.amazon.com/*",
+    "*://*.amazon.co.uk/*",
+    "*://*.amazon.ca/*",
+    "*://*.amazon.de/*",
+    "*://*.amazon.fr/*",
+    "*://*.amazon.es/*",
+    "*://*.amazon.it/*",
+    "*://*.amazon.co.jp/*",
+    "*://*.amazon.com.au/*",
+    "*://*.amazon.in/*",
+    "*://*.amazon.com.mx/*",
+    "*://*.amazon.com.br/*"
   ],
   "content_scripts": [
     {
       "matches": [
         "*://www.google.com/search*",
         "*://www.google.com/shopping*",
-        "*://shopping.google.com/*"
+        "*://shopping.google.com/*",
+        "*://*.amazon.com/*",
+        "*://*.amazon.co.uk/*",
+        "*://*.amazon.ca/*",
+        "*://*.amazon.de/*",
+        "*://*.amazon.fr/*",
+        "*://*.amazon.es/*",
+        "*://*.amazon.it/*",
+        "*://*.amazon.co.jp/*",
+        "*://*.amazon.com.au/*",
+        "*://*.amazon.in/*",
+        "*://*.amazon.com.mx/*",
+        "*://*.amazon.com.br/*"
       ],
       "js": ["content.js"],
       "css": ["styles.css"],

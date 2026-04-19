@@ -17,7 +17,41 @@ div[aria-label="Ads"],
 .pla-unit-container,
 
 /* Google Shopping tab sponsored tiles */
-[data-docid][data-sponsored="true"] {
+[data-docid][data-sponsored="true"],
+
+/* Amazon: sponsored search result items */
+.s-result-item[data-component-type="sp-sponsored-result"],
+[data-component-type^="s-sponsored-brand"],
+[data-component-type="s-brand-footer-slot"],
+[data-component-type="sbx-launchpad"],
+[data-component-type="sbv-video-single-product"],
+[data-component-type="s-sponsored-products-carousel"],
+[data-cel-widget*="MAIN-SPONSORED" i],
+[data-cel-widget*="sp_atf" i],
+[data-cel-widget*="sp_btf" i],
+[data-cel-widget*="sb-video" i],
+[data-cel-widget*="sb_atf" i],
+[data-cel-widget*="sb_btf" i],
+.AdHolder,
+.s-result-item.AdHolder,
+.sb-desktop,
+.sb-mobile,
+[data-card-metrics-id^="sb-"],
+[data-card-metrics-id*="sponsored-brand"],
+
+/* Amazon: product detail page sponsored carousels & slots */
+#sponsoredProducts_feature_div,
+#sp_detail,
+#sp_detail2,
+#sp_detail_thematic,
+#sims-consolidated-1_feature_div[data-a-sponsored="true"],
+div[cel_widget_id*="sponsored"],
+div[cel_widget_id*="SPONSORED"] {
+  display: none !important;
+}
+
+/* Amazon: JS-flagged sponsored rows (fallback for label-based detection) */
+.s-result-item[data-sh-amazon-sponsored="1"] {
   display: none !important;
 }
 
