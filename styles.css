@@ -1,0 +1,29 @@
+/* Top / bottom ad rails on Google Search */
+#tads,
+#tadsb,
+#bottomads,
+
+/* Individual sponsored text ads (Google marks these explicitly) */
+div[data-text-ad="1"],
+
+/* Labeled ad regions */
+div[aria-label="Ads"],
+
+/* Shopping / PLA units embedded in the main SERP */
+.commercial-unit-desktop-top,
+.commercial-unit-desktop-rhs,
+.commercial-unit-mobile-top,
+.commercial-unit-mobile-bottom,
+.pla-unit-container,
+
+/* Google Shopping tab sponsored tiles */
+[data-docid][data-sponsored="true"] {
+  display: none !important;
+}
+
+/* AI Overview — only hidden when the toggle is on */
+html.sh-hide-ai [data-subtree="aio"],
+html.sh-hide-ai div[data-attrid*="AIOverview"],
+html.sh-hide-ai #m-x-content {
+  display: none !important;
+}

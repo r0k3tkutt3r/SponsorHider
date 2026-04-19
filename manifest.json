@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "SponsorHider",
+  "version": "1.0.0",
+  "description": "Hides sponsored results on Google Search and Google Shopping. Optionally hides the AI Overview.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "*://www.google.com/*",
+    "*://shopping.google.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.google.com/search*",
+        "*://www.google.com/shopping*",
+        "*://shopping.google.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SponsorHider"
+  }
+}
