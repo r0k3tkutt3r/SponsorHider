@@ -1,57 +1,65 @@
 /* Top / bottom ad rails on Google Search */
-#tads,
-#tadsb,
-#bottomads,
+html.sh-hide-sponsored #tads,
+html.sh-hide-sponsored #tadsb,
+html.sh-hide-sponsored #bottomads,
 
 /* Individual sponsored text ads (Google marks these explicitly) */
-div[data-text-ad="1"],
+html.sh-hide-sponsored div[data-text-ad="1"],
+
+/* MjjYud wrappers that contain a sponsored result or ad label */
+html.sh-hide-sponsored .MjjYud:has(div[data-text-ad="1"]),
+html.sh-hide-sponsored .MjjYud:has(div[aria-label="Ads"]),
+html.sh-hide-sponsored .MjjYud:has([data-pla="1"]),
 
 /* Labeled ad regions */
-div[aria-label="Ads"],
+html.sh-hide-sponsored div[aria-label="Ads"],
 
 /* Shopping / PLA units embedded in the main SERP */
-.commercial-unit-desktop-top,
-.commercial-unit-desktop-rhs,
-.commercial-unit-mobile-top,
-.commercial-unit-mobile-bottom,
-.pla-unit-container,
+html.sh-hide-sponsored .commercial-unit-desktop-top,
+html.sh-hide-sponsored .commercial-unit-desktop-rhs,
+html.sh-hide-sponsored .commercial-unit-mobile-top,
+html.sh-hide-sponsored .commercial-unit-mobile-bottom,
+html.sh-hide-sponsored .pla-unit-container,
 
 /* Google Shopping tab sponsored tiles */
-[data-docid][data-sponsored="true"],
+html.sh-hide-sponsored [data-docid][data-sponsored="true"],
 
 /* Amazon: sponsored search result items */
-.s-result-item[data-component-type="sp-sponsored-result"],
-[data-component-type^="s-sponsored-brand"],
-[data-component-type="s-brand-footer-slot"],
-[data-component-type="sbx-launchpad"],
-[data-component-type="sbv-video-single-product"],
-[data-component-type="s-sponsored-products-carousel"],
-[data-cel-widget*="MAIN-SPONSORED" i],
-[data-cel-widget*="sp_atf" i],
-[data-cel-widget*="sp_btf" i],
-[data-cel-widget*="sb-video" i],
-[data-cel-widget*="sb_atf" i],
-[data-cel-widget*="sb_btf" i],
-.AdHolder,
-.s-result-item.AdHolder,
-.sb-desktop,
-.sb-mobile,
-[data-card-metrics-id^="sb-"],
-[data-card-metrics-id*="sponsored-brand"],
+html.sh-hide-sponsored .s-result-item[data-component-type="sp-sponsored-result"],
+html.sh-hide-sponsored [data-component-type^="s-sponsored-brand"],
+html.sh-hide-sponsored [data-component-type="s-brand-footer-slot"],
+html.sh-hide-sponsored [data-component-type="sbx-launchpad"],
+html.sh-hide-sponsored [data-component-type="sbv-video-single-product"],
+html.sh-hide-sponsored [data-component-type="s-sponsored-products-carousel"],
+html.sh-hide-sponsored [data-cel-widget*="MAIN-SPONSORED" i],
+html.sh-hide-sponsored [data-cel-widget*="sp_atf" i],
+html.sh-hide-sponsored [data-cel-widget*="sp_btf" i],
+html.sh-hide-sponsored [data-cel-widget*="sb-video" i],
+html.sh-hide-sponsored [data-cel-widget*="sb_atf" i],
+html.sh-hide-sponsored [data-cel-widget*="sb_btf" i],
+html.sh-hide-sponsored .AdHolder,
+html.sh-hide-sponsored .s-result-item.AdHolder,
+html.sh-hide-sponsored .sb-desktop,
+html.sh-hide-sponsored .sb-mobile,
+html.sh-hide-sponsored [data-card-metrics-id^="sb-"],
+html.sh-hide-sponsored [data-card-metrics-id*="sponsored-brand"],
 
 /* Amazon: product detail page sponsored carousels & slots */
-#sponsoredProducts_feature_div,
-#sp_detail,
-#sp_detail2,
-#sp_detail_thematic,
-#sims-consolidated-1_feature_div[data-a-sponsored="true"],
-div[cel_widget_id*="sponsored"],
-div[cel_widget_id*="SPONSORED"] {
+html.sh-hide-sponsored #sponsoredProducts_feature_div,
+html.sh-hide-sponsored #sp_detail,
+html.sh-hide-sponsored #sp_detail2,
+html.sh-hide-sponsored #sp_detail_thematic,
+html.sh-hide-sponsored [id^="sims-consolidated-"][data-a-sponsored="true"],
+html.sh-hide-sponsored [data-a-sponsored="true"],
+html.sh-hide-sponsored div[cel_widget_id*="sponsored"],
+html.sh-hide-sponsored div[cel_widget_id*="SPONSORED"] {
   display: none !important;
 }
 
 /* Amazon: JS-flagged sponsored rows (fallback for label-based detection) */
-.s-result-item[data-sh-amazon-sponsored="1"] {
+html.sh-hide-sponsored .s-result-item[data-sh-amazon-sponsored="1"],
+html.sh-hide-sponsored [data-sh-google-sponsored="1"],
+html.sh-hide-sponsored [data-sh-amazon-sponsored="1"] {
   display: none !important;
 }
 

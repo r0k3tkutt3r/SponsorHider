@@ -19,11 +19,13 @@
 
   const AI_HEADING_PREFIXES = ['AI Overview', 'AI overview'];
 
+  let blockSponsors = true;
   let hideAi = false;
 
-  function applyAiClass() {
+  function applyRootClasses() {
     const root = document.documentElement;
     if (!root) return;
+    root.classList.toggle('sh-hide-sponsored', blockSponsors);
     root.classList.toggle('sh-hide-ai', hideAi);
   }
 
@@ -56,19 +58,73 @@
     });
   }
 
-  chrome.storage.sync.get({ hideAi: false }, (items) => {
+  function restoreSponsored() {
+    document
+      .querySelectorAll(
+        '[data-sh-google-sponsored="1"], [data-sh-amazon-sponsored="1"]'
+      )
+      .forEach((el) => {
+        el.style.removeProperty('display');
+        el.removeAttribute('data-sh-google-sponsored');
+        el.removeAttribute('data-sh-amazon-sponsored');
+      });
+  }
+
+  chrome.storage.sync.get({ blockSponsors: true, hideAi: false }, (items) => {
+    blockSponsors = items.blockSponsors !== false;
     hideAi = !!items.hideAi;
-    applyAiClass();
+    applyRootClasses();
     scanAi();
+    scanGoogle();
+    scanAmazon();
   });
 
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area !== 'sync' || !changes.hideAi) return;
-    hideAi = !!changes.hideAi.newValue;
-    applyAiClass();
-    if (hideAi) scanAi();
-    else restoreAi();
+    if (area !== 'sync') return;
+
+    if (changes.blockSponsors) {
+      blockSponsors = changes.blockSponsors.newValue !== false;
+    }
+
+    if (changes.hideAi) {
+      hideAi = !!changes.hideAi.newValue;
+    }
+
+    applyRootClasses();
+
+    if (changes.blockSponsors) {
+      if (blockSponsors) {
+        scanGoogle();
+        scanAmazon();
+      } else {
+        restoreSponsored();
+      }
+    }
+
+    if (changes.hideAi) {
+      if (hideAi) scanAi();
+      else restoreAi();
+    }
   });
+
+  const isGoogle = /(^|\.)google\.[a-z.]+$/i.test(location.hostname);
+
+  function scanGoogle() {
+    if (!blockSponsors || !isGoogle || !document.body) return;
+    const candidates = document.body.querySelectorAll(
+      '.MjjYud:not([data-sh-google-sponsored])'
+    );
+    for (const el of candidates) {
+      const headings = el.querySelectorAll('h1,h2,h3,[role="heading"]');
+      for (const h of headings) {
+        if (/sponsored result/i.test(h.textContent || '')) {
+          el.dataset.shGoogleSponsored = '1';
+          el.style.setProperty('display', 'none', 'important');
+          break;
+        }
+      }
+    }
+  }
 
   const isAmazon = /(^|\.)amazon\.[a-z.]+$/i.test(location.hostname);
 
@@ -101,6 +157,26 @@
     el.style.setProperty('display', 'none', 'important');
   }
 
+  function hasOrganicAmazonResults(el) {
+    return !!el?.querySelector(
+      '.s-result-item:not([data-component-type="sp-sponsored-result"])'
+    );
+  }
+
+  function findAmazonTextShell(el) {
+    let current = el;
+    while (current && current !== document.body) {
+      if (
+        current.matches?.('.a-section.a-spacing-none') &&
+        current.parentElement?.classList.contains('sg-col-inner')
+      ) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+    return null;
+  }
+
   // A .s-result-item sits directly inside the main results grid; hiding its
   // enclosing widget wrapper would take out unrelated results. For anything
   // else (Sponsored Brand cards, AdHolder, etc.), the enclosing widget is
@@ -109,19 +185,41 @@
     if (!card) return;
     hideEl(card);
     if (card.matches('.s-result-item')) return;
+    const textShell = findAmazonTextShell(card);
+    if (textShell && textShell !== card && !hasOrganicAmazonResults(textShell)) {
+      hideEl(textShell);
+    }
     const widget = card.closest('[data-cel-widget], .s-widget-container');
-    if (widget && widget !== card) hideEl(widget);
+    if (widget && widget !== card && !hasOrganicAmazonResults(widget)) {
+      hideEl(widget);
+    }
   }
 
   function scanAmazon() {
-    if (!isAmazon || !document.body) return;
+    if (!blockSponsors || !isAmazon || !document.body) return;
 
     // 1. Label-based detection: hide the nearest card and, for non-result
     //    widgets, the slot wrapper around it (so headings disappear too).
     const labels = document.body.querySelectorAll(AMZ_LABEL_SELECTOR);
     for (const label of labels) {
+      const textShell = findAmazonTextShell(label);
+      if (textShell && !hasOrganicAmazonResults(textShell)) hideEl(textShell);
       const card = label.closest(AMZ_CARD_SELECTOR);
-      if (card) hideCardAndWidget(card);
+      if (card) {
+        hideCardAndWidget(card);
+      } else {
+        // Section-level sponsored label (e.g. "Customers frequently viewed")
+        const section = label.closest(
+          '[data-cel-widget], [data-component-type], .s-widget-container'
+        );
+        if (
+          section &&
+          !section.dataset.shAmazonSponsored &&
+          !section.matches('.s-main-slot, [data-cel-widget="MAIN-SEARCH-RESULTS"]')
+        ) {
+          hideEl(section);
+        }
+      }
     }
 
     // 2. Class-based detection for Sponsored Brand inline cards that have
@@ -141,6 +239,30 @@
     for (const w of widgets) {
       if (isSponsoredCelWidget(w)) hideEl(w);
     }
+
+    // 4. Text-based: detect section-level "Sponsored" labels that aren't
+    //    caught by selector-based passes (e.g. "Customers frequently viewed").
+    const secondarySpans = document.body.querySelectorAll(
+      '.a-size-base.a-color-secondary:not([data-sh-amazon-sponsored]), ' +
+      'span.puis-sponsored-label-text:not([data-sh-amazon-sponsored])'
+    );
+    for (const span of secondarySpans) {
+      const ownText = [...span.childNodes]
+        .filter((n) => n.nodeType === Node.TEXT_NODE)
+        .map((n) => n.textContent.trim())
+        .join('');
+      if (ownText !== 'Sponsored') continue;
+      const section = span.closest(
+        '[data-cel-widget], [data-component-type], .s-widget-container'
+      );
+      if (
+        section &&
+        !section.dataset.shAmazonSponsored &&
+        !section.matches('.s-main-slot, [data-cel-widget="MAIN-SEARCH-RESULTS"]')
+      ) {
+        hideEl(section);
+      }
+    }
   }
 
   let pending = false;
@@ -149,8 +271,9 @@
     pending = true;
     requestAnimationFrame(() => {
       pending = false;
-      applyAiClass();
+      applyRootClasses();
       scanAi();
+      scanGoogle();
       scanAmazon();
     });
   }

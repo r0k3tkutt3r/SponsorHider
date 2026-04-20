@@ -1,10 +1,10 @@
 # SponsorHider
 
-A Chrome extension that hides sponsored results and ads from Google Search, Google Shopping, and Amazon, with an optional toggle to hide Google's AI Overview.
+A Chrome extension that hides sponsored results and ads from Google Search, Google Shopping, and Amazon, with popup toggles to disable sponsor blocking or hide Google's AI Overview.
 
 ## What It Does
 
-- **Removes sponsored results** from Google Search and Google Shopping
+- **Removes sponsored results** from Google Search and Google Shopping, with a toggle to turn sponsor blocking on or off
 - **Hides ads on Amazon** across multiple regional sites (US, UK, CA, DE, FR, ES, IT, JP, AU, IN, MX, BR)
 - **Optional AI Overview removal** - toggle on/off to hide/show Google's AI Overview in search results
 
@@ -33,8 +33,15 @@ The extension automatically runs on these sites with no additional setup needed 
 ### Basic Features
 
 Simply browse Google Search, Google Shopping, or Amazon normally:
-- Sponsored results are hidden automatically
+- Sponsored results are hidden automatically by default
 - Ads on Amazon are removed automatically
+
+### Toggle Sponsor Blocking
+
+1. Click the SponsorHider extension icon in your toolbar
+2. Check **"Hide sponsored results"** to block sponsored listings and ads
+3. Uncheck it to allow sponsored results to appear again
+4. Your preference is saved and persists across sessions
 
 ### Toggle AI Overview
 
@@ -65,7 +72,7 @@ Simply browse Google Search, Google Shopping, or Amazon normally:
 
 - **Manifest Version**: 3 (modern Chrome extension format)
 - **Permissions**: Storage only (no tracking, no browsing data access)
-- **Data Storage**: Preferences stored locally using Chrome's sync storage
+- **Data Storage**: Sponsor blocking and AI Overview preferences are stored locally using Chrome's sync storage
 
 ## Troubleshooting
 
@@ -87,7 +94,7 @@ Simply browse Google Search, Google Shopping, or Amazon normally:
 This extension:
 - ✅ Does not collect any personal data
 - ✅ Does not track your browsing
-- ✅ Only stores your AI Overview preference locally
+- ✅ Only stores your sponsor blocking and AI Overview preferences locally
 - ✅ Requires no accounts or sign-ups
 
 ## Development
@@ -104,7 +111,8 @@ To modify or contribute to this extension:
 - `content.js` - Main script that hides ads and sponsored results
 - `popup.html` - Extension popup UI
 - `popup.js` - Popup functionality and settings
-- `styles.css` - Popup styling
+- `popup.css` - Popup styling
+- `styles.css` - Content script CSS selectors for hiding sponsored elements
 
 ## License
 

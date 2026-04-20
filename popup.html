@@ -6,14 +6,17 @@
   </head>
   <body>
     <h1>SponsorHider</h1>
-    <p class="status">
-      Sponsored results on Google Search, Google Shopping, and Amazon are hidden automatically.
-    </p>
+    <p class="status" id="status"></p>
+    <label class="toggle">
+      <input type="checkbox" id="blockSponsors" />
+      <span>Hide sponsored results</span>
+    </label>
+    <p class="hint" id="sponsorHint"></p>
     <label class="toggle">
       <input type="checkbox" id="hideAi" />
       <span>Also hide AI Overview</span>
     </label>
-    <p class="hint" id="hint"></p>
+    <p class="hint" id="aiHint"></p>
     <script src="popup.js"></script>
   </body>
 </html>

@@ -28,6 +28,7 @@ h1 {
   font-size: 13px;
   cursor: pointer;
   user-select: none;
+  margin-top: 12px;
 }
 
 .toggle input {
